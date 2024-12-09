@@ -1,0 +1,36 @@
+services:
+ db:
+  image: mariadb:10.11.2
+  volumes:
+  - db_data_prestashop:/var/lib/mysql
+  restart: no
+  environment:
+   MYSQL_ROOT_PASSWORD: 12345678
+   MYSQL_DATABASE: prestashop
+   MYSQL_USER: prestashop_user
+   MYSQL_PASSWORD: 12345678
+ prestashop:
+  depends_on:
+   - db
+  image: prestashop/prestashop:latest
+  ports:
+   - "9080:80"
+  restart: no
+  environment:
+   PS_DEV_MODE: 0
+   PS_HOST_MODE: 0
+   PS_DEMO_MODE: 0
+   DB_SERVER: db
+   DB_USER: prestashop_user
+   DB_PASSWD: 123
+   DB_PREFIX: ps_
+   DB_NAME: prestashop
+   PS_LANGUAGE: en
+   PS_SHOP_NAME: prueba
+   PS_DOMAIN: "localhost:9080"
+  networks:
+   - prestashop_network
+volumes:
+ db_data_prestashop:
+networks:
+ prestashop_network:
